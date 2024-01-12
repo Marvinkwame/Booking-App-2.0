@@ -1,0 +1,35 @@
+export const hotelTypes = [
+    "Apartments",
+    "Luxury tents",
+    "Love Hotels",
+    "Cottages",
+    "Country Houses",
+    "Farm Stays",
+    "Vacation Homes",
+    "Bed and Breakfasts",
+    "Villas",
+    "Resort Villages",
+    "Ryokans",
+    "Chalets",
+    "Gites",
+    "Homestays",
+]
+
+export const hotelFacilities = [
+    "Free WiFi",
+    "Bathtub",
+    "Non-smoking rooms",
+    "Safe",
+    "Baggage storage",
+    "Heating",
+    "Parking on site",
+    "Kitchen",
+    "Air conditioning",
+    "Daily housekeeping",
+    "Terrace",
+    "Pet friendly",
+    "City view",
+    "Elevator",
+    "Balcony",
+    "Washing machine"
+]

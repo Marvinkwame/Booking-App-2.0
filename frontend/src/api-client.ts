@@ -60,3 +60,18 @@ export const logout = async () => {
         throw new Error("Logout Error")
     }
 }
+
+export const createHotel = async (hotelFormData: FormData) => {
+    const response = await fetch(`${API_BASE_URL}/api/my-hotels/`, {
+        method: "POST",
+        credentials: "include", //sending the http cookie once the user is logged in
+        body: hotelFormData,
+    });
+
+    if(!response.ok) {
+        throw new Error("Failed to create hotel");
+    }
+
+    return response.json(); //contains the hotel we just added to the body of the response
+
+};

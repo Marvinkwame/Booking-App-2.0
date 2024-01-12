@@ -3,9 +3,18 @@ import cors from "cors";
 import "dotenv/config";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
-import userRoutes from "./routes/userRoutes"
-import authRoutes from "./routes/authRoutes"
+import userRoutes from "./routes/userRoutes";
+import authRoutes from "./routes/authRoutes";
+import hotelRoutes from "./routes/myHotelsRoutes";
 import path from "path";
+import { v2 as cloudinary } from 'cloudinary';
+
+//starts connection to cloudinary from here
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+})
 
 mongoose.connect(process.env.MONGO_CONNECTION_STRING as string);
 
@@ -22,8 +31,14 @@ app.use(express.static(path.join(__dirname, "../../frontend/dist")))
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/my-hotels", hotelRoutes)
+
+//to pass on any request to our url that are not url endpoint 
+app.get("*", (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'))
+}) 
 
 
 app.listen(4000, () => {
-    console.log("I'm running on this port")
+    console.log("I'm running localhost:4000")
 })
