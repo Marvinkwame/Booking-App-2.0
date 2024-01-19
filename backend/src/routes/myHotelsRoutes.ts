@@ -1,9 +1,10 @@
 import express, { Request, Response } from "express";
 import multer from "multer";
 import cloudinary from "cloudinary";
-import Hotel, { HotelType } from "../models/Hotel";
+import Hotel from "../models/Hotel";
 import verifyToken from "../middleware/auth";
 import { body, check, validationResult } from "express-validator";
+import { HotelType } from "../shared/types";
 
 const router = express.Router();
 
@@ -23,14 +24,14 @@ router.post("/", verifyToken, [
     body("description").notEmpty().withMessage('Description is required'),
     body("type").notEmpty().withMessage('Hotel Type is required'),
     body("pricePerNight")
-    .notEmpty().isNumeric()
-    .withMessage('Price Per Night is required and must be number'),
+        .notEmpty().isNumeric()
+        .withMessage('Price Per Night is required and must be number'),
     body("facilities").notEmpty().isArray().withMessage('Facilities are required'),
 ], upload.array("imageFiles", 6), async (req: Request, res: Response) => {
 
     try {
         const imagesFiles = req.files as Express.Multer.File[];
-        const newHotel: HotelType = req.body;   
+        const newHotel: HotelType = req.body;
 
         //upload images to cloundinary
         const uploadPromises = imagesFiles.map(async (image) => {
@@ -61,6 +62,16 @@ router.post("/", verifyToken, [
         res.status(500).json({ message: "Server Error" });
     }
 });
+
+router.get("/", verifyToken, async (req: Request, res: Response) => {
+    try {
+        const hotels = await Hotel.find({ userId: req.userId });
+        res.json(hotels)
+
+    } catch (err) {
+        res.status(500).json({ message: 'server error' })
+    }
+})
 
 
 export default router;
