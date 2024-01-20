@@ -34,7 +34,7 @@ export const login = async (formData: LoginFormData) => {
 
     const body = await response.json();
 
-    if(!response.ok) {
+    if (!response.ok) {
         throw new Error(body.message);
     }
 }
@@ -57,7 +57,7 @@ export const logout = async () => {
         credentials: "include"
     })
 
-    if(!response.ok) {
+    if (!response.ok) {
         throw new Error("Logout Error")
     }
 }
@@ -69,7 +69,7 @@ export const createHotel = async (hotelFormData: FormData) => {
         body: hotelFormData,
     });
 
-    if(!response.ok) {
+    if (!response.ok) {
         throw new Error("Failed to create hotel");
     }
 
@@ -82,10 +82,41 @@ export const getHotels = async (): Promise<HotelType[]> => {
         credentials: "include", //send the http cookie along with the fetch request
     })
 
-    if(!response.ok) {
+    if (!response.ok) {
         throw new Error("Failed To Fetch Hotel");
     }
 
     //we get an arrray of hotels if its success
     return response.json();
+}
+
+//single hotel by id
+export const getSingleHotelById = async (hotelId: string): Promise<HotelType> => {
+    const response = await fetch(`${API_BASE_URL}/api/my-hotels/${hotelId}`, {
+        credentials: "include",
+    })
+
+    if (!response.ok) {
+        throw new Error("Failed To Fetch")
+    }
+
+    return response.json() //contains the data returned
+
+}
+
+//updating a hotel
+export const updateHotel = async (hotelFormData: FormData) => {
+    const response = await
+        fetch(`${API_BASE_URL}/api/my-hotels/${hotelFormData.get("hotelId")}`, {
+            method: 'PUT',
+            body: hotelFormData,
+            credentials: "include",
+        })
+
+    if (!response.ok) {
+        throw new Error("Failed To Update")
+    }
+
+    return response.json()
+
 }

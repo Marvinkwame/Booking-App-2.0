@@ -65,7 +65,32 @@ test("show hotels", async ({ page }) => {
     await expect(page.getByText("2 Adults, 4 Children")).toBeVisible();
     await expect(page.getByText("3 rating")).toBeVisible();
 
-    await expect(page.getByRole("link", { name: "View Hotel" })).toBeVisible()
+    await expect(page.getByRole("link", { name: "View Hotel" }).first()).toBeVisible()
     await expect(page.getByRole("link", { name: "Add Hotel" })).toBeVisible()
+
+})
+
+test("should edit hotel", async({ page }) => {
+    await page.goto(`${UI_URL}my-hotels`) //reasons it to test that the view details button takes us to the edit page
+
+    await page.getByRole("link", { name: 'View Hotel' }).first().click()
+
+    //basically wait for this to appear in the DOM, cos there is quiet a lot of stuffs that has to happen
+    await page.waitForSelector('[name="name"]', { state: "attached"}) //wait fo the input to appear in the browser
+    await expect(page.locator('[name="name"]')).toHaveValue("Hacienda Napoles")
+    await page.locator('[name="name"]').fill("Hacienda Kasoa ")
+
+    await page.getByRole("button", { name: "Save" }).click();
+
+    await expect(page.getByText("Hotel Updated Succesfully")).toBeVisible()
+
+    await page.reload() //refreshes the page
+
+    await expect(page.locator('[name="name"]')).toHaveValue("Hacienda Kasoa ")
+
+    //once the test updates we reset the value
+    await page.locator('[name="name"]').fill("Hacienda Napoles")
+
+    await page.getByRole("button", { name: "Save" }).click();
 
 })

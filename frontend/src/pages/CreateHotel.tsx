@@ -11,7 +11,7 @@ const CreateHotel = () => {
   const { mutate, isLoading } = useMutation(apiClient.createHotel, {
     onSuccess: () => {
       showToast({ message: "Hotel Created", type: "SUCCESS"})
-    }, 
+    },  
     onError: () => {
       showToast({ message: "Error in creating hotel", type: "ERROR"})
     }
