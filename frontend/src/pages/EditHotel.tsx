@@ -13,7 +13,7 @@ const EditHotel = () => {
     const { data: hotelData}  = useQuery("getSingleHotelById", 
     () =>  apiClient.getSingleHotelById(hotelId || ""), { 
         //so if there is a hotelId, then this function runs
-        enabled: !!hotelId //check for a truthy value
+        enabled: !!hotelId //check for a truthy value. Basically if there is a a hotelId then this function works
     })
 
     const { mutate, isLoading } = useMutation(apiClient.updateHotel, {

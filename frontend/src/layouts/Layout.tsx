@@ -2,21 +2,25 @@ import React from 'react'
 import Header from '../components/Header'
 import Hero from '../components/Hero'
 import Footer from '../components/Footer'
+import SeacrhBar from '../components/SeacrhBar';
 
-interface Props  {
+interface Props {
   children: React.ReactNode;
 }
 
 const Layout = ({ children }: Props) => {
   return (
     <div className='flex flex-col min-h-screen'>
-        {/* Header */}
-        <Header />
-        <Hero />
-        <div className="container mx-auto py-10 flex-1">
-          {children}
+      {/* Header */}
+      <Header />
+      <Hero />
+      <div className="mx-auto container">
+        <SeacrhBar />
+      </div>
+      <div className="container mx-auto py-10 flex-1">
+        {children}
         </div>
-        <Footer />
+      <Footer />
     </div>
   )
 }

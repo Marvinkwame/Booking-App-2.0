@@ -11,7 +11,7 @@ export const hotelTypes = [
     "Resort Villages",
     "Ryokans",
     "Chalets",
-    "Gites",
+    "Suites",
     "Homestays",
 ]
 
