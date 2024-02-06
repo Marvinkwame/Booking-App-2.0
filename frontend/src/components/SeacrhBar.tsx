@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { useSearchContext } from '../context/SearchContext'
 import { CiLocationOn } from "react-icons/ci";
 import DatePicker from "react-datepicker";
