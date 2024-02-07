@@ -90,7 +90,7 @@ export const getHotels = async (): Promise<HotelType[]> => {
     return response.json();
 }
 
-//single hotel by id
+//single myhotel by id
 export const getSingleHotelById = async (hotelId: string): Promise<HotelType> => {
     const response = await fetch(`${API_BASE_URL}/api/my-hotels/${hotelId}`, {
         credentials: "include",
@@ -159,6 +159,16 @@ export const getSearchHotel = async (searchParams: SearchParams): Promise<HotelS
 
     if (!response.ok) {
         throw new Error("Failed To Get Searched Hotels")
+    }
+
+    return response.json()
+}
+
+//get a single hotel by id
+export const getSingleHotel = async (hotelId: string): Promise<HotelType> => {
+    const response = await fetch(`${API_BASE_URL}/api/hotel/${hotelId}`);
+    if(!response.ok) {
+        throw new Error("Failed To Get Hotel");
     }
 
     return response.json()

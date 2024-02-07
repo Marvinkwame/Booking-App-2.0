@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto(UI_URL);
 
   //get sign-in button
-  await page.getByRole("link", { name: "Sign In"}).click();
+  await page.getByRole("link", { name: "Sign In" }).click();
 
   //WHEN IT GETS TO THE SIGN-IN PAGE, THERE SHOULD BE A HEADING WITH LOGIN
   await expect(page.getByRole("heading", { name: "Login" })).toBeVisible();
@@ -21,11 +21,22 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('should display searched hotels', async ({ page }) => {
-    await page.goto(UI_URL);
+  await page.goto(UI_URL);
 
-    await page.getByPlaceholder("Enter Destination").fill("Bogota")
-    await page.getByRole("button", { name:"Search" }).click()
+  await page.getByPlaceholder("Enter Destination").fill("Bogota")
+  await page.getByRole("button", { name: "Search" }).click()
 
-    await expect(page.getByText("Hotels Found in Bogota")).toBeVisible() //assertion
-    await expect(page.getByText("Hacienda Kasoa")).toBeVisible()
+  await expect(page.getByText("Hotels Found in Bogota")).toBeVisible() //assertion
+  await expect(page.getByText("Hacienda Kasoa")).toBeVisible()
+})
+
+test('view detail page for a hotel', async ({ page }) => {
+  await page.goto(UI_URL);
+
+  await page.getByPlaceholder("Enter Destination").fill("Bogota")
+  await page.getByRole("button", { name: "Search" }).click()
+
+  await page.getByText("Hacienda Kasoa").click() //becos we can click the title
+  await expect(page).toHaveURL(/hotel-details/);
+  await expect(page.getByRole("button", { name: "Book Now" })).toBeVisible()
 })

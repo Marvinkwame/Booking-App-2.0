@@ -59,7 +59,7 @@ const SearchHotelCard = ({ hotel }: SearchResultProps) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> 
     )
 }
 
