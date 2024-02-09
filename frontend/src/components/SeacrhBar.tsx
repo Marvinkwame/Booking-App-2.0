@@ -100,7 +100,7 @@ const SeacrhBar = () => {
             endDate={checkOut}
             minDate={minDate}
             maxDate={maxDate}
-            placeholderText='Check-In Date'
+            placeholderText='Check-out Date'
             className='min-w-full bg-transparent p-3 focus:outline-none'
             wrapperClassName='min-w-full'
           />

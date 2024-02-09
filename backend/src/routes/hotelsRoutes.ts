@@ -1,11 +1,13 @@
 import express, { Request, Response } from "express";
 import Hotel from "../models/Hotel";
-import { HotelSearchResponse } from "../shared/types";
+import { BookingType, HotelSearchResponse, HotelType, PaymentIntentResponse } from "../shared/types";
 import { param, validationResult } from "express-validator";
+import Stripe from "stripe";
+import verifyToken from "../middleware/auth";
+
+const stripe = new Stripe(process.env.STRIPE_API_KEY as string)
 
 const router = express.Router();
-
-
 
 
 router.get("/search", async (req: Request, res: Response) => {
@@ -64,16 +66,111 @@ router.get("/:id", [
   param("id").notEmpty().withMessage("Hotel Id is required")
 ], async (req: Request, res: Response) => {
   const errors = validationResult(req);
-  if(!errors.isEmpty()) {
+  if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() })
   }
-  
+
   const id = req.params.id.toString()
 
   try {
     const hotel = await Hotel.findById(id)
 
     res.json(hotel)
+
+  } catch (err) {
+    console.log("error", err);
+    res.status(500).json({ message: "Server Error" })
+  }
+})
+
+router.post("/:hotelId/bookings/payment-intent", verifyToken, async (req: Request, res: Response) => {
+  //To create payment intent:
+  //1.Total Cost
+  //2.hotelId
+  //3.userId
+
+  const { nightsToSpend } = req.body; //getting the number of nights
+  const hotelId = req.params.hotelId;
+
+  const hotel = await Hotel.findById(hotelId);
+  if (!hotel) {
+    return res.status(400).json({ message: "No Hotel Found" })
+  }
+
+  const totalAmount = hotel.pricePerNight * nightsToSpend;
+
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: totalAmount * 100,
+    currency: "gbp",
+    metadata: { //stores additional stuffs against the payment intent
+      hotelId,
+      userId: req.userId //also helps to check if a booking has been paid for been saving the the db
+    }
+  })
+
+  //A client secret is something we need to return to the frontend so 
+  //that the user can create a card payment against this payment intent
+  if (!paymentIntent.client_secret) {
+    return res.status(500).json({ message: "Error in creating payment intent" })
+  }
+
+  //what to send back to frontend
+  const response: PaymentIntentResponse = {
+    paymentIntentId: paymentIntent.id, //initialize some stripe elements on the frontend
+    clientSecret: paymentIntent.client_secret.toString(), //this will be used by StripeElements to make a card element that users can put their cards into with this id 
+    totalAmount
+  }
+
+  res.send(response);
+
+})
+
+router.post("/:hotelId/bookings", verifyToken, async (req: Request, res: Response) => {
+  try {
+    //check if stripe payment was successful 
+    // check if booking has been paid
+    //Use the paymentIntentId that will be sent to us by the frontend
+    //Payment IntentId is basically the id for the booking
+    const paymentIntentId = req.body.paymentIntentId;
+
+    //Getting the invoice for this booking
+    const paymentIntent = await stripe.paymentIntents.retrieve(
+      paymentIntentId as string
+    )
+
+    if (!paymentIntent) {
+      return res.status(400).json({ message: "Payment Intent Not Found" })
+    }
+
+    //check whether the hotelId and userId stored in the paymentIntent matches what we get from the request
+    if (paymentIntent.metadata.hotelId !== req.params.hotelId || 
+      paymentIntent.metadata.userId !== req.userId) {
+        return res.status(400).json({ message: "Payment Intent Mismatch" });
+    }
+
+    if(paymentIntent.status !== 'succeeded') {
+      return res.status(400)
+      .json({ message: `payemnt intent not succeded. Status: ${paymentIntent.status}`})
+    }
+
+    const newBooking: BookingType = {
+      ...req.body,
+      userId: req.userId
+    }
+
+    //get the hotel and update it
+    const hotel = await Hotel.findOneAndUpdate({
+      _id: req.params.hotelId
+    }, {
+      $push: { bookings: newBooking }
+    })
+
+    if(!hotel) {
+      return res.status(400).json({ message: "Hotel Not Found" })
+    }
+
+    await hotel.save()
+    res.status(200).send()
 
   } catch (err) {
     console.log("error", err);

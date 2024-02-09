@@ -2,6 +2,7 @@ import express, { Request, Response } from "express"
 import User from "../models/User";
 import jwt from 'jsonwebtoken'
 import { check, validationResult } from "express-validator";
+import verifyToken from "../middleware/auth";
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ router.post("/register", [
     check("password", "Password with 6 or more characters required").isLength({ min: 6, }),
 ], async (req: Request, res: Response) => {
     const errors = validationResult(req);
-    if(!errors.isEmpty()) {
+    if (!errors.isEmpty()) {
         return res.status(400).json({ message: errors.array() })
     }
     try {
@@ -40,13 +41,30 @@ router.post("/register", [
             maxAge: 86400000,
         })
 
-        return res.status(200).send({ message: "User sucessfully registered "});
+        return res.status(200).send({ message: "User sucessfully registered " });
 
 
     } catch (error) {
         console.log(error);
-        res.status(500).send({ message: "Something went wrong"})
+        res.status(500).send({ message: "Something went wrong" })
 
+    }
+})
+
+
+router.get("/me", verifyToken, async (req: Request, res: Response) => {
+    const userId = req.userId; //taking the id from the cookie
+
+    try {
+        const user = await User.findById(userId).select("-password") //selects everything but the pasword
+        if (!user) {
+            return res.status(400).json({ message: "User not found" })
+        }
+
+        res.json(user)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: "Something went wrong" })
     }
 })
 
