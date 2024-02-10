@@ -143,14 +143,14 @@ router.post("/:hotelId/bookings", verifyToken, async (req: Request, res: Respons
     }
 
     //check whether the hotelId and userId stored in the paymentIntent matches what we get from the request
-    if (paymentIntent.metadata.hotelId !== req.params.hotelId || 
+    if (paymentIntent.metadata.hotelId !== req.params.hotelId ||
       paymentIntent.metadata.userId !== req.userId) {
-        return res.status(400).json({ message: "Payment Intent Mismatch" });
+      return res.status(400).json({ message: "Payment Intent Mismatch" });
     }
 
-    if(paymentIntent.status !== 'succeeded') {
+    if (paymentIntent.status !== 'succeeded') {
       return res.status(400)
-      .json({ message: `payemnt intent not succeded. Status: ${paymentIntent.status}`})
+        .json({ message: `payemnt intent not succeded. Status: ${paymentIntent.status}` })
     }
 
     const newBooking: BookingType = {
@@ -165,7 +165,7 @@ router.post("/:hotelId/bookings", verifyToken, async (req: Request, res: Respons
       $push: { bookings: newBooking }
     })
 
-    if(!hotel) {
+    if (!hotel) {
       return res.status(400).json({ message: "Hotel Not Found" })
     }
 
@@ -176,6 +176,18 @@ router.post("/:hotelId/bookings", verifyToken, async (req: Request, res: Respons
     console.log("error", err);
     res.status(500).json({ message: "Server Error" })
   }
+})
+
+
+router.get("/", async (req: Request, res: Response) => {
+  try {
+    const allHotels = await Hotel.find().sort("-lastUpdated");
+    res.json(allHotels)
+  } catch (err) {
+    console.log("error", err);
+    res.status(500).json({ message: "Server Error" })
+  }
+
 })
 
 const constructSearchQuery = (queryParams: any) => {
