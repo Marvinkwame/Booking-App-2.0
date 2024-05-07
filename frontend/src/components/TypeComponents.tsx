@@ -10,7 +10,7 @@ const TypeComponents = () => {
         {hotelTypes.map((type, index) => (
           <Link to={`/types/${type}`} key={index}>
             <div className="w-full h-[100px] md:h-[330px]">
-              <img src={`/public/img/${type}.jpg`}
+              <img src={`/img/${type}.jpg`}
                 className='w-full h-full object-cover object-center'
                 alt={type} />
             </div>
