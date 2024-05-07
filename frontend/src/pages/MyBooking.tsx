@@ -13,9 +13,9 @@ const MyBooking = () => {
     console.log(myBookings)
     return (
         <div className='space-y-5'>
-            <h3>My Bookings</h3>
+            <h3 className="text-3xl font-bold">My Bookings</h3>
             {myBookings.map((myBooking) => (
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_3fr] border border-gray-700 rounded-md p-8 gap-5">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_3fr] border-2 border-blue-600  rounded-md p-8 gap-5">
                     <div className='lg:w-full lg:h-[250px]'>
                         <img src={myBooking.imageUrls[0]}
                             className='w-full h-full object-cover object-center'

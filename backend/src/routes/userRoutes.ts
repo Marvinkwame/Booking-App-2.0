@@ -29,11 +29,17 @@ router.post("/register", [
         user = new User(req.body);
         await user.save();
 
+        //This function is typically used to generate a JWT by signing a payload 
+        //with a secret key or a private key.
         const token = jwt.sign({
-            userId: user._id
-        }, process.env.JWT_SECRET_KEY as string, {
+            userId: user._id //helps us dentify who the user is that is trying to make a given request. Store it in the token
+        }, process.env.JWT_SECRET_KEY as string, { //This is the jwt secret key used to encrypt the token
             expiresIn: "1d"
         })
+
+        //In summary, this code generates a JWT containing the user's userId, 
+        //signs it using the secret key stored in the JWT_SECRET_KEY environment 
+        //variable, and sets an expiration time of one day ("1d").
 
         res.cookie("authToken", token, {
             httpOnly: true, //can only be accessed on the server

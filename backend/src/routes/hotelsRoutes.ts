@@ -190,6 +190,18 @@ router.get("/", async (req: Request, res: Response) => {
 
 })
 
+//get by type
+router.get("/type/:type", async (req: Request, res: Response) => {
+  try {
+    const searchType = req.params.type.toString();
+    const hotelType = await Hotel.find({ type: searchType  });
+    res.json(hotelType)
+  } catch (err) {
+    console.log("error", err);
+    res.status(500).json({ message: "Server Error" })
+  }
+})
+
 const constructSearchQuery = (queryParams: any) => {
   let constructedQuery: any = {};
 

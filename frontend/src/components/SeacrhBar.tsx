@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 
 const SeacrhBar = () => {
   const search = useSearchContext()
-  console.log(search)
   const navigate = useNavigate()
 
   const [destination, setDestination] = useState<string>(search.destination)
@@ -32,7 +31,7 @@ const SeacrhBar = () => {
   return (
     <form onSubmit={handleSubmit}
       className='-mt-16 px-4 py-8  rounded-md bg-slate-800
-      shadow-md grid grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 gap-4 items-center'>
+      shadow-md grid lg:grid-cols-5 2xl:grid-cols-5 gap-4 items-center'>
       {/* Destination */}
 
 

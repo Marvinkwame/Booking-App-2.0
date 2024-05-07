@@ -19,7 +19,6 @@ const Login = () => {
     const queryClient = useQueryClient()
     const location = useLocation();
 
-    console.log(location)
 
     const mutation = useMutation(apiClient.login, {
         onSuccess: async () => {

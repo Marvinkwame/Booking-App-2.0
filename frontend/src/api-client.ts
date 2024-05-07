@@ -244,3 +244,14 @@ export const getAllHotels = async (): Promise<HotelType[]> => {
 
     return response.json()
 }
+
+//fetch by type 
+export const getTypes = async (type: string): Promise<HotelType[]> => {
+    const response = await fetch(`${API_BASE_URL}/api/hotel/type/${type}`);
+
+    if(!response.ok) {
+        throw new Error("Error fetch types")
+    }
+
+    return  response.json();
+}

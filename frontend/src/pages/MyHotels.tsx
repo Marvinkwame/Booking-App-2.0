@@ -28,7 +28,7 @@ const MyHotels = () => {
 
                 <Link to="/add-hotel"
                     className='border-none px-4 py-2 bg-teal-950 hover:bg-teal-900 text-white font-bold'>
-                    Add Hotel
+                    List your property
                 </Link>
             </div>
 
@@ -42,19 +42,19 @@ const MyHotels = () => {
                         </h2>
                         <p className='whitespace-pre-line'>{hotel.description}</p>
                         <div className="grid grid-cols-4 gap-2">
-                            <div className="border flex items-center">
+                            <div className="border border-blue-600 flex items-center">
                                 <BiDollar />
                                 {hotel.pricePerNight} per night
                             </div>
-                            <div className="border flex items-center gap-2">
+                            <div className="border border-blue-600 flex items-center gap-2">
                                 <FaRegBuilding />
                                 {hotel.type} 
                             </div>
-                            <div className="border flex items-center gap-2">
+                            <div className="border border-blue-600 flex items-center gap-2">
                                 <MdPeople />
                                 {hotel.adultCount} Adults,  {hotel.childCount} Children
                             </div>
-                            <div className="border flex items-center gap-2">
+                            <div className="border border-blue-600 flex items-center gap-2">
                                 <FaRegStar className="text-yellow-500 font-bold h-6" />
                                 {hotel.starRating} rating
                             </div>

@@ -13,6 +13,7 @@ import DetailView from './pages/DetailView';
 import Booking from './pages/Booking';
 import MyBooking from './pages/MyBooking';
 import Home from './pages/Home';
+import HomePageTypes from './components/HomePageTypes'; 
 
 function App() {
   const { isLoggedIn } = useAppContext();
@@ -30,6 +31,7 @@ function App() {
         <Route path="/login" element={<Layout> <Login /> </Layout>} />
         <Route path="/search" element={<Layout> <SearchPage /> </Layout>} />
         <Route path='/hotel-details/:hotelId' element={<Layout> <DetailView /> </Layout>}  />
+        <Route path='/types/:type' element={<Layout> <HomePageTypes /> </Layout>}  />
 
         {isLoggedIn && <>
           <Route path="/add-hotel" element={<Layout> <CreateHotel /> </Layout>} />
